@@ -5,7 +5,7 @@ import time
 
 # Game settings
 POPUP_LIFETIME = 2500  # ms popup stays
-POPUP_INTERVAL = 2000  # ms between popup refresh
+POPUP_INTERVAL = 1500  # ms between popup refresh
 WIN_HITS = 5
 GAME_DURATION = 20     # seconds
 OTHER_ANIMALS = ["rat.jpeg", "squirrel2.jpeg", "racoon2.jpeg"]
@@ -15,7 +15,7 @@ class PopupMoleGame:
         self.root = root
         self.root.title("Popup Whack-a-Mole")
         
-        self.root.geometry("300x150+0+0") #width x height + x_offset + y_offset
+        self.root.geometry("300x200+0+0") #width x height + x_offset + y_offset
         self.root.attributes("-topmost", True)
 
         self.score = 0
