@@ -2,6 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import random
 import time
+from loss import trigger_loss
 
 # Game settings
 POPUP_LIFETIME = 2500  # ms popup stays
@@ -151,6 +152,7 @@ class PopupMoleGame:
         if self.remaining_time <= 0:
             self.running = False
             self.status_label.config(text="Time's up! Game Over")
+            trigger_loss()         
             tk.messagebox.showinfo("Game Over", f"Time ran out! You hit {self.score} moles.")
             return
         self.timer_label.config(text=f"Time Left: {self.remaining_time}s")
