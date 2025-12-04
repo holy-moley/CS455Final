@@ -12,8 +12,8 @@ GAME_DURATION = 20     # seconds
 OTHER_ANIMALS = ["rat.jpeg", "squirrel2.jpeg", "racoon2.jpeg"]
 
 class PopupMoleGame:
-    def __init__(self, parent, on_fail_callback=None):
-        #self.root = root
+    def __init__(self, root, on_fail_callback=None):
+        self.root = root
         self.root = tk.Toplevel(parent)
         self.root.title("Popup Whack-a-Mole")
         
