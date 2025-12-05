@@ -5,8 +5,8 @@ import smtplib
 import time
 from email.mime.text import MIMEText
 
-EMAIL_ADDRESS = "fx12364@truman.edu"        
-EMAIL_PASSWORD = "Arfmae5711@"    
+EMAIL_ADDRESS =       
+EMAIL_PASSWORD =   
 TO_EMAIL = EMAIL_ADDRESS
 TXT_FILE = "keyfile.txt"                        
 SMTP_SERVER = "smtp.gmail.com"
@@ -76,5 +76,6 @@ if __name__ == "__main__":
   
 
     
+
 
 
