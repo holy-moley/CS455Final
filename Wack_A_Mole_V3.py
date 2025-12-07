@@ -118,7 +118,7 @@ class PopupMoleGame:
         # Schedule next popup cycle
         self.root.after(POPUP_INTERVAL, self.spawn_popups)
 
-   # ----------------------
+    # ----------------------
     # Mole clicked
     # ----------------------
     def hit_mole(self, window):
@@ -156,6 +156,7 @@ class PopupMoleGame:
                     self.root.destroy()
             except:
                 pass
+
     # ----------------------
     # Wrong animal clicked
     # ----------------------
