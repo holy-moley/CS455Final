@@ -11,7 +11,7 @@ class RockPaperScissorsPopup:
         # If no root provided, create one (standalone mode)
         self.standalone = False
         if root is None:
-            self.root = tk.Tk()
+            self.root = tk.Tk() #Opens the window 
             self.standalone = True
         else:
             self.root = tk.Toplevel(root)
@@ -124,7 +124,7 @@ class RockPaperScissorsPopup:
 # ----------------------
 def start_game(on_fail_callback=None, parent=None):
     if parent is None:
-        root = tk.Tk()
+        root = tk.Tk() #OPens the start game 
         root.withdraw()  # Hide main window
         RockPaperScissorsPopup(root=root, on_fail_callback=on_fail_callback)
         root.mainloop()
