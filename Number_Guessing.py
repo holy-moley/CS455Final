@@ -75,14 +75,17 @@ def start_game(on_fail_callback=None):
     # Use the launcher root
     from tkinter import _default_root as root
     if root is None:
-        root = tk.Tk()
+        root = tk.Tk()             #Problem was here --------------------------------------------------------
     NumberGuessPopup(root, on_fail_callback=on_fail_callback)
+
+
 
 # ----------------------
 # Run standalone
 # ----------------------
 if __name__ == "__main__":
-    root = tk.Tk()
+    root = tk.Tk() #opens a window
     root.withdraw()  # Hide the main window the frist one
     NumberGuessPopup(root)
     root.mainloop()
+   
