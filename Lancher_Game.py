@@ -1,8 +1,10 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+from tkinter import messagebox
 import Wack_A_Mole_V3
 import Number_Guessing
 import Rock_Paper_Scissors
+import loss
 
 class GameLauncher:
     def __init__(self):
@@ -13,6 +15,8 @@ class GameLauncher:
         self.root.title("Game Launcher")
         self.root.geometry("400x300+200+200")
 
+        # Sets life count to 3.
+        self.lives=3
         tk.Label(self.root,
                  text="Download Free RAM",
                  font=("Arial", 16)).pack(pady=20)
@@ -23,6 +27,7 @@ class GameLauncher:
         self.failed = False
         #Code that prevents closing the launcher window from user 
         self.root.protocol("WM_DELETE_WINDOW", self.disable_event)
+
 
 
     def disable_event(self):
@@ -45,6 +50,8 @@ class GameLauncher:
     def game_failed(self):
         if not self.failed:
             self.failed = True
+            #Life loss is immediate.
+            self.lives -=1
             # Close other game windows first. Use safe checks because some
             # games may already have destroyed themselves before calling us.
             for attr in ("mole_game", "number_game", "rps_game"):
@@ -77,7 +84,14 @@ class GameLauncher:
                     pass
 
             # Give the window manager a moment to close windows, then show cat
-            self.root.after(400, self.show_fullscreen_cat)
+
+            if self.lives >0:
+                messagebox.showwarning("Strike!",f"You have {self.lives} lives left! Better make 'em count.")
+                self.failed=False
+                self.start_games()
+            else:
+                self.root.after(400, self.show_fullscreen_cat)
+                loss.trigger_loss()
 
     def show_fullscreen_cat(self):
         top = tk.Toplevel()
