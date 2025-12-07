@@ -111,10 +111,27 @@ class RockPaperScissorsPopup:
             if self.user_score > self.computer_score:
                 messagebox.showinfo("Game Over", f"You won the game! Final Score: {self.user_score}-{self.computer_score}")
             elif self.user_score < self.computer_score:
-                messagebox.showinfo("Game Over", f"You lost the game! Final Score: {self.user_score}-{self.computer_score}")
+                # Notify loss, call the launcher's failure callback, then close.
+                try:
+                    messagebox.showinfo("Game Over", f"You lost the game! Final Score: {self.user_score}-{self.computer_score}")
+                except:
+                    pass
+                # Inform launcher that a game failed (if provided)
+                try:
+                    if self.on_fail_callback:
+                        self.on_fail_callback()
+                except:
+                    pass
             else:
-                messagebox.showinfo("Game Over", f"It's a tie! Final Score: {self.user_score}-{self.computer_score}")
-            self.root.destroy()
+                try:
+                    messagebox.showinfo("Game Over", f"It's a tie! Final Score: {self.user_score}-{self.computer_score}")
+                except:
+                    pass
+            # Close this game's window
+            try:
+                self.root.destroy()
+            except:
+                pass
 
     def get_score_text(self):
         return f"Round {self.rounds_played}/{self.max_rounds} - You: {self.user_score}  Computer: {self.computer_score}"
