@@ -14,7 +14,6 @@ OTHER_ANIMALS = ["rat.jpeg", "squirrel2.jpeg", "racoon2.jpeg"]
 class PopupMoleGame:
     def __init__(self, root, on_fail_callback=None):
         self.root = root
-        self.root = tk.Toplevel(parent)
         self.root.title("Popup Whack-a-Mole")
         
         self.root.geometry("300x200+0+0") #width x height + x_offset + y_offset
@@ -174,11 +173,12 @@ class PopupMoleGame:
         self.remaining_time -= 1
         self.root.after(1500, self.update_timer)
 
+
 # ----------------------
 # Top-level function for launcher (run when lanuchers dose it)
 # ----------------------
 def start_game(on_fail_callback=None):
-    root = tk.Tk()
+    root = tk.Tk() #Creates the window #--------------------------------Problem -------------------------
     game = PopupMoleGame(root, on_fail_callback=on_fail_callback)
     root.mainloop()
 
