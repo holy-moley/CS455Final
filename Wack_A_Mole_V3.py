@@ -118,7 +118,7 @@ class PopupMoleGame:
         # Schedule next popup cycle
         self.root.after(POPUP_INTERVAL, self.spawn_popups)
 
-    # ----------------------
+   # ----------------------
     # Mole clicked
     # ----------------------
     def hit_mole(self, window):
@@ -131,8 +131,31 @@ class PopupMoleGame:
         if self.score >= WIN_HITS:
             self.running = False
             self.status_label.config(text="You Win!")
-            tk.messagebox.showinfo("Victory!", "You bonked the Mole")
+            # Notify the player, then clean up: destroy any remaining popup
+            # windows and close this game's main window so it doesn't linger.
+            try:
+                tk.messagebox.showinfo("Victory!", "You bonked the Mole")
+            except:
+                pass
+            
+            #make the window close properly if the game has won 
+            # Destroy any active popup windows
+            try:
+                for p in list(getattr(self, 'active_popups', [])):
+                    try:
+                        p.destroy()
+                    except:
+                        pass
+                self.active_popups.clear()
+            except:
+                pass
 
+            # Close the game's main window (safe-guard in case it's a Toplevel)
+            try:
+                if hasattr(self, 'root') and self.root is not None:
+                    self.root.destroy()
+            except:
+                pass
     # ----------------------
     # Wrong animal clicked
     # ----------------------
