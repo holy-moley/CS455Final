@@ -2,11 +2,12 @@
 import os
 
 def trigger_loss():
-    """Creates 15 'You Lose' files on the Desktop."""
+    #Creates 15 'You Lose' files to be placed on the Desktop.
     #Find desktop path, works for windows or most linux distros
+
     desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
     
-    
+    #Creates file with "You lose" text in it and sends to desktop folder
     try:
         for x in range (14):
             name = str(x) + "_loss.txt"
