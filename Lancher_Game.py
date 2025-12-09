@@ -4,117 +4,120 @@ from tkinter import messagebox
 import Wack_A_Mole_V3
 import Number_Guessing
 import Rock_Paper_Scissors
-import loss
+import loss #The file bomb code 
 
 class GameLauncher:
     def __init__(self):
+        # Main launcher window
         self.root = tk.Tk()
-        #This line of code cause problems with main window opening
-        #self.root.withdraw()  # Hide main window (1st one for la)
-
         self.root.title("Game Launcher")
         self.root.geometry("400x300+200+200")
 
-        # Sets life count to 3.
-        self.lives=3
-        tk.Label(self.root,
-                 text="Download Free RAM",
-                 font=("Arial", 16)).pack(pady=20)
-
+        # Game state: lives and failure tracking
+        self.lives = 3
+        self.failed = False
+        self.game_instances = {}
+        
+        # UI: title and start button
+        tk.Label(self.root, text="Download Free RAM", font=("Arial", 16)).pack(pady=20)
         tk.Button(self.root, text="Download", font=("Arial", 14),
                   command=self.start_games).pack(pady=20)
 
-        self.failed = False
-        #Code that prevents closing the launcher window from user 
+        # Prevent closing the launcher
         self.root.protocol("WM_DELETE_WINDOW", self.disable_event)
 
-
-
+    #Prevent closing the launcher window early
     def disable_event(self):
-        #prevent the closing of the launcher while the games are running
         pass
 
+    #Start Game 
     def start_games(self):
-        # Hide the launcher window
-        self.root.withdraw()
+        self.root.withdraw() #Hide the launcher window
         
-        # Launch all games. Keep references so we can close them if one fails.
-        # Pass the launcher root to games that create their own Toplevel windows
-        # to avoid creating an extra blank Toplevel first.
+        # Launch all three games
         self.mole_game = Wack_A_Mole_V3.PopupMoleGame(tk.Toplevel(self.root), on_fail_callback=self.game_failed)
         self.number_game = Number_Guessing.NumberGuessPopup(self.root, on_fail_callback=self.game_failed)
         self.rps_game = Rock_Paper_Scissors.RockPaperScissorsPopup(self.root, on_fail_callback=self.game_failed)
         
         
-
-    def game_failed(self):
-        if not self.failed:
-            self.failed = True
-            #Life loss is immediate.
-            self.lives -=1
-            # Close other game windows first. Use safe checks because some
-            # games may already have destroyed themselves before calling us.
-            for attr in ("mole_game", "number_game", "rps_game"):
-                game = getattr(self, attr, None)
-                if not game:
-                    continue
+        
+    #Close all active game windows (Variable format for each game)
+    def close_all_games(self):
+        # Close Whack-A-Mole popups and window, using attributes
+        if hasattr(self.mole_game, 'active_popups'):
+            for popup in list(self.mole_game.active_popups):
                 try:
-                    # Wack-A-Mole keeps a list of active popups
-                    if hasattr(game, 'active_popups'):
-                        for p in list(getattr(game, 'active_popups', [])):
-                            try:
-                                p.destroy()
-                            except:
-                                pass
-                    # Number guess stores its Toplevel in `popup`
-                    if hasattr(game, 'popup'):
-                        try:
-                            game.popup.destroy()
-                        except:
-                            pass
-                    # Most others expose `root` = Toplevel or Tk
-                    elif hasattr(game, 'root'):
-                        try:
-                            # Don't destroy the launcher's main root
-                            if game.root is not self.root:
-                                game.root.destroy()
-                        except:
-                            pass
-                except Exception:
+                    popup.destroy()
+                except:
                     pass
-
-            # Give the window manager a moment to close windows, then show cat
-
-            if self.lives >0:
-                messagebox.showwarning("Strike!",f"You have {self.lives} lives left! Better make 'em count.")
-                self.failed=False
-                self.start_games()
-            else:
-                self.root.after(400, self.show_fullscreen_cat)
-                loss.trigger_loss()
+        if hasattr(self.mole_game, 'root') and self.mole_game.root is not self.root:
+            try:
+                self.mole_game.root.destroy()
+            except:
+                pass
+        
+        # Close Number Guessing popup
+        if hasattr(self.number_game, 'popup'):
+            try:
+                self.number_game.popup.destroy()
+            except:
+                pass
+        
+        # Close Rock-Paper-Scissors window
+        if hasattr(self.rps_game, 'root') and self.rps_game.root is not self.root:
+            try:
+                self.rps_game.root.destroy()
+            except:
+                pass
+        
+    #Handles a loss in any of the games
+    def game_failed(self):
+        if self.failed:
+            return  # Already processing failure
+        
+        self.failed = True
+        self.lives -= 1
+        self.close_all_games()
+        
+        # Check if player has lives remaining
+        if self.lives > 0:
+            # Show warning and restart games
+            messagebox.showwarning("Strike!", 
+                f"You have {self.lives} lives left! Better make 'em count.")
+            self.failed = False
+            self.start_games()
+        else:
+            # No lives left: show jumpscare and trigger penalty
+            self.root.after(400, self.show_fullscreen_cat)
+            loss.trigger_loss() #Trigger the bomb code
 
     def show_fullscreen_cat(self):
-        top = tk.Toplevel()
-        top.attributes("-fullscreen", True)
-        top.attributes("-topmost", True)
+        #Put image on full screen on top of everything
+        jumpscare_window = tk.Toplevel()
+        jumpscare_window.attributes("-fullscreen", True)
+        jumpscare_window.attributes("-topmost", True)
 
-        screen_width = top.winfo_screenwidth()
-        screen_height = top.winfo_screenheight()
+        # Load and display cat image
+        screen_width = jumpscare_window.winfo_screenwidth()
+        screen_height = jumpscare_window.winfo_screenheight()
         img = Image.open("Cat.jpeg").resize((screen_width, screen_height))
         photo = ImageTk.PhotoImage(img)
 
-        label = tk.Label(top, image=photo)
+        label = tk.Label(jumpscare_window, image=photo)
         label.image = photo
         label.pack()
 
-        top.after(3000, lambda: self.quit_all(top))
+        # Close jumpscare after 3 seconds
+        jumpscare_window.after(3000, lambda: self.quit_all(jumpscare_window))
 
-    def quit_all(self, top):
-        top.destroy()
+    #Close everything 
+    def quit_all(self, window):
+        window.destroy()
         try:
-            tk._default_root.quit()
+            self.root.quit()
         except:
             pass
+
 
 if __name__ == "__main__":
     launcher = GameLauncher()
